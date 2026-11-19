@@ -1,0 +1,13 @@
+{
+  "name": "Listas Java - JDK 17",
+  "image": "mcr.microsoft.com/devcontainers/java:17",
+  "postCreateCommand": "bash lista-13/exercicio-1/baixar-lombok.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "ritwickdey.LiveServer"
+      ]
+    }
+  }
+}
