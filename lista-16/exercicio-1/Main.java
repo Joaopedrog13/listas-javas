@@ -1,34 +1,52 @@
 import java.util.Locale;
 import java.util.Scanner;
 
-// Lista 16 - Exercício 1: enum NivelAcesso com switch expression
+// Lista 16 - Exercício 2: enum TipoFrete com switch para calcular o total
 public class Main {
 
-    enum NivelAcesso {
-        ADMINISTRADOR, USUARIO, VISITANTE
+    enum TipoFrete {
+        ECONOMICO, EXPRESSO, RETIRADA
     }
+
+    private static final Locale BR = Locale.forLanguageTag("pt-BR");
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        System.out.print("Escolha o nível (ADMINISTRADOR, USUARIO ou VISITANTE): ");
-        String entrada = sc.hasNextLine() ? sc.nextLine().trim().toUpperCase(Locale.ROOT) : "";
-        sc.close();
 
-        NivelAcesso nivel;
-        try {
-            nivel = NivelAcesso.valueOf(entrada);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Nível inválido. Use ADMINISTRADOR, USUARIO ou VISITANTE.");
-            return;
+        TipoFrete tipo = null;
+        while (tipo == null) {
+            System.out.print("Tipo de frete (ECONOMICO, EXPRESSO ou RETIRADA): ");
+            if (!sc.hasNextLine()) return;
+            String entrada = sc.nextLine().trim().toUpperCase(Locale.ROOT);
+            try {
+                tipo = TipoFrete.valueOf(entrada);
+            } catch (IllegalArgumentException e) {
+                System.out.println("Opção inválida! Digite ECONOMICO, EXPRESSO ou RETIRADA.");
+            }
         }
 
-        // switch moderno: retorna o valor direto, sem break, e cobre todos os casos do enum
-        String mensagem = switch (nivel) {
-            case ADMINISTRADOR -> "Acesso total";
-            case USUARIO -> "Pode visualizar e editar seus dados";
-            case VISITANTE -> "Pode apenas visualizar";
-        };
+        double valorProduto = -1;
+        while (valorProduto < 0) {
+            System.out.print("Valor do produto: R$ ");
+            if (!sc.hasNextLine()) return;
+            try {
+                valorProduto = Double.parseDouble(sc.nextLine().trim().replace(",", "."));
+                if (valorProduto < 0) System.out.println("O valor não pode ser negativo.");
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido! Digite um número.");
+            }
+        }
+        sc.close();
 
-        System.out.println(nivel + ": " + mensagem);
+        double frete = switch (tipo) {
+            case ECONOMICO -> 12.50;
+            case EXPRESSO -> 25.00;
+            case RETIRADA -> 0.00;
+        };
+        double total = valorProduto + frete;
+
+        System.out.println("\nFrete: " + tipo);
+        System.out.println("Valor do frete: R$ " + String.format(BR, "%.2f", frete));
+        System.out.println("Total: R$ " + String.format(BR, "%.2f", total));
     }
 }
